@@ -3,10 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from utils import *
 
-
 cluster = Cluster(['127.0.0.1'])
 session = cluster.connect('beats_ai')
-
 
 def basic_analysis():
     feature_map = {
@@ -40,8 +38,6 @@ def basic_analysis():
 
         x_hat = np.array(data_hat[x_label])
         y_hat = np.array(data_hat[y_label])
-
-        print(len(x1), len(x2))
 
         ax.scatter(x1,    y1,    color="red",   alpha=0.6, s=10)
         ax.scatter(x2,    y2,    color="green", alpha=0.6, s=10)
