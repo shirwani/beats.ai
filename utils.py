@@ -65,3 +65,78 @@ def fcn_logger(fcn):
         print(f"Done '{fcn.__name__}'")
         return result
     return wrapper
+
+
+def get_data_from_db(session, genre):
+    query = "SELECT * FROM tracks WHERE genre = %s ALLOW FILTERING;"
+    tracks = session.execute(query, (genre, ))
+    data = dict()
+    data['tempo']           = list()
+    data['energy']          = list()
+    data['danceability']    = list()
+    data['complexity']      = list()
+    data['loudness']        = list()
+    data['speechiness']     = list()
+    data['valence']         = list()
+    data['time_signature']  = list()
+    data['key']             = list()
+    data['key_mode']        = list()
+    data['views']           = list()
+    data['likes']           = list()
+    data['popularity']      = list()
+
+    for track in tracks:
+        if track.key_mode is None:
+            continue
+
+        data['tempo'].append(track.tempo)
+        data['energy'].append(track.energy)
+        data['danceability'].append(track.danceability)
+        data['complexity'].append(track.complexity)
+        data['loudness'].append(track.loudness)
+        data['speechiness'].append(track.speechiness)
+        data['valence'].append(track.valence)
+        data['time_signature'].append(track.time_signature)
+        data['key'].append(track.key)
+        data['key_mode'].append(track.key_mode)
+        data['views'].append(track.views)
+        data['likes'].append(track.likes)
+        data['popularity'].append(track.likes/track.views)
+
+    return data
+
+def get_hat_data():
+    data = dict()
+    data['tempo'] = list()
+    data['energy'] = list()
+    data['danceability'] = list()
+    data['complexity'] = list()
+    data['loudness'] = list()
+    data['speechiness']     = list()
+    data['valence'] = list()
+    data['time_signature'] = list()
+    data['key'] = list()
+    data['key_mode'] = list()
+    data['views'] = list()
+    data['likes'] = list()
+    data['popularity'] = list()
+
+    tracks = read_from_json_file('hackaz.json')
+
+    for key in tracks:
+        data['tempo'].append(tracks[key]['tempo'])
+        data['energy'].append(tracks[key]['energy'])
+        data['danceability'].append(tracks[key]['danceability'])
+        data['complexity'].append(tracks[key]['complexity'])
+        data['loudness'].append(tracks[key]['loudness'])
+        data['speechiness'].append(tracks[key]['speechiness'])
+        data['valence'].append(tracks[key]['valence'])
+        data['time_signature'].append(tracks[key]['time_signature'])
+        data['key'].append(tracks[key]['key'])
+        data['key_mode'].append(tracks[key]['key_mode'])
+        data['views'].append(tracks[key]['views'])
+        data['likes'].append(tracks[key]['likes'])
+        data['popularity'].append(tracks[key]['likes']/tracks[key]['views'])
+
+    return data
+
