@@ -2,13 +2,14 @@ from audio_utils import *
 import concurrent.futures
 from cassandra.cluster import Cluster
 import os
-
+from utils import *
 import concurrent.futures
 from concurrent.futures import ProcessPoolExecutor, TimeoutError
 
 cluster = Cluster(['127.0.0.1'])
 session = cluster.connect('beats_ai')
 
+@fcn_logger
 def extract_and_update_db(track):
     print(f"Analyzing {track['filename']}")
 
@@ -26,7 +27,8 @@ def extract_and_update_db(track):
          loudness        = %s,
          valence         = %s,
          time_signature  = %s,
-         key             = %s
+         key             = %s,
+         key_mode        = %s
         WHERE id = %s;
         """
 
@@ -40,6 +42,7 @@ def extract_and_update_db(track):
             f['valence'],
             f['time_signature'],
             f['key'],
+            f['key_mode'],
             track['id']))
 
     print(f"✅ Song record updated for {track['id']}")
@@ -49,28 +52,24 @@ def extract_features():
     query = "SELECT * FROM TRACKS"
     tracks = session.execute(query)
 
-    #print(tracks.title)
-
-    # Create threads
-    # with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-
     ptracks = list()
     for track in tracks:
-        if track.tempo is None: # only do this if we haven't extracted features yet
+        # only do this if we haven't extracted features yet
+        if track.key_mode is None:
             ptracks.append(track._asdict())
 
-    with ProcessPoolExecutor(max_workers=10) as executor:
+    with ProcessPoolExecutor(max_workers=5) as executor:
         future_to_track = {executor.submit(extract_and_update_db, track): track for track in ptracks}
 
         for future in concurrent.futures.as_completed(future_to_track):
             track = future_to_track[future]
             try:
-                future.result(timeout=120)
-                print(f"✅ Finished processing: {track}")
+                future.result(timeout=1000)
+                print(f"✅ Finished processing: {track['title']}")
             except TimeoutError:
-                print(f"⏱️ Timeout: {track}")
+                print(f"⏱️ Timeout: {track['title']}")
             except Exception as e:
-                print(f"❌ Error processing {track}: {e}")
+                print(f"❌ Error processing {track['title']}: {e}")
 
 
 if __name__ == '__main__':

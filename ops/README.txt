@@ -62,3 +62,15 @@ docker exec cassandra-container cqlsh -e "COPY beats_ai.tracks TO '/tmp/tracks.c
 docker cp cassandra-container:/tmp/tracks.csv ./tracks.csv
 
 
+################################
+# Chordino - via chord-extractor
+################################
+git clone https://github.com/ohollo/chord-extractor.git
+cd chord-extractor
+docker build -t chord-extractor .
+docker run -v /path/to/your/audio/files:/audio_files chord-extractor python3 -m chord_extractor /audio_files/your_audio_file.wav
+
+docker run -v /Users/macmini/PycharmProjects/beats.ai/samples:/audio_files chord-extractor python3 -m chord_extractor /audio_files/amends.mp3
+
+
+

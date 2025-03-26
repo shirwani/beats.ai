@@ -16,16 +16,17 @@ def get_data_from_db(genre):
     data['energy']          = list()
     data['danceability']    = list()
     data['complexity']      = list()
-    data['speechiness']     = list()
     data['loudness']        = list()
     data['valence']         = list()
     data['time_signature']  = list()
+    data['key']             = list()
+    data['key_mode']        = list()
     data['views']           = list()
     data['likes']           = list()
     data['popularity']      = list()
 
     for track in tracks:
-        if track.tempo is None:
+        if track.key_mode is None:
             continue
 
         if track.views < 100000:
@@ -35,10 +36,11 @@ def get_data_from_db(genre):
         data['energy'].append(track.energy)
         data['danceability'].append(track.danceability)
         data['complexity'].append(track.complexity)
-        data['speechiness'].append(track.speechiness)
         data['loudness'].append(track.loudness)
         data['valence'].append(track.valence)
         data['time_signature'].append(track.time_signature)
+        data['key'].append(track.key)
+        data['key_mode'].append(track.key_mode)
         data['views'].append(track.views)
         data['likes'].append(track.likes)
         data['popularity'].append(track.likes/track.views)
@@ -52,10 +54,11 @@ def get_hat_data():
     data['energy'] = list()
     data['danceability'] = list()
     data['complexity'] = list()
-    data['speechiness'] = list()
     data['loudness'] = list()
     data['valence'] = list()
     data['time_signature'] = list()
+    data['key'] = list()
+    data['key_mode'] = list()
     data['views'] = list()
     data['likes'] = list()
     data['popularity'] = list()
@@ -67,13 +70,15 @@ def get_hat_data():
         data['energy'].append(tracks[key]['energy'])
         data['danceability'].append(tracks[key]['danceability'])
         data['complexity'].append(tracks[key]['complexity'])
-        data['speechiness'].append(tracks[key]['speechiness'])
         data['loudness'].append(tracks[key]['loudness'])
         data['valence'].append(tracks[key]['valence'])
         data['time_signature'].append(tracks[key]['time_signature'])
+        data['key'].append(tracks[key]['key'])
         data['views'].append(tracks[key]['views'])
         data['likes'].append(tracks[key]['likes'])
         data['popularity'].append(tracks[key]['likes']/tracks[key]['views'])
+        data['key'].append(tracks[key]['key'])
+        data['key_mode'].append(tracks[key]['key_mode'])
 
     return data
 
@@ -84,10 +89,10 @@ def basic_analysis():
         "energy":           "Energy Level",
         "danceability":     "Danceability",
         "complexity":       "Melodic Complexity",
-        "speechiness":      "Speechiness",
         "loudness":         "Loudness (dB)",
         "valence":          "Valence (Happiness)",
-        "time_signature":   "Time Signature"
+        "time_signature":   "Time Signature",
+        "key_mode":          "key_mode"
     }
 
     data1 = get_data_from_db(genre="hip_hop_and_rap")
@@ -110,8 +115,10 @@ def basic_analysis():
         x_hat = np.array(data_hat[x_label])
         y_hat = np.array(data_hat[y_label])
 
-        ax.scatter(x2,    y2,    color="green", alpha=0.6, s=10)
+        print(len(x1), len(x2))
+
         ax.scatter(x1,    y1,    color="red",   alpha=0.6, s=10)
+        ax.scatter(x2,    y2,    color="green", alpha=0.6, s=10)
         ax.scatter(x_hat, y_hat, color="blue",  alpha=0.6, s=10)
 
         #coeffs = np.polyfit(x, y, 2)  # Degree 1 for a straight line

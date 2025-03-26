@@ -1,7 +1,7 @@
 import hashlib
 import json
 import csv
-
+from functools import wraps
 
 def hashify(text):
     """
@@ -54,3 +54,14 @@ def read_list_from_text_file(file):
     lines = [line.strip() for line in lines]
     return lines
 
+def fcn_logger(fcn):
+    """
+    Log function calls
+    """
+    @wraps(fcn)
+    def wrapper(*args, **kwargs):
+        print(f"Calling '{fcn.__name__}'")
+        result = fcn(*args, **kwargs)
+        print(f"Done '{fcn.__name__}'")
+        return result
+    return wrapper
