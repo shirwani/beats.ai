@@ -11,10 +11,9 @@ from utils import *
 db = Cassandra()
 cfg = read_from_json_file('config.json')
 db_tablename = cfg['downloads']['db_tablename']
-
-output  = 'popularity'
-colname = 'artist'
-colval  = "Kendrick Lamar"
+output  = cfg['prediction']['output']
+colname = cfg['prediction']['colname']
+colval  = cfg['prediction']['colval']
 
 def train_model():
     # Load dataset

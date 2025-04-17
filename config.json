@@ -1,0 +1,26 @@
+{
+  "database": {
+    "db_host":        "127.0.0.1",
+    "db_port":        9042,
+    "db_timeout":     1000,
+    "db_keyspace":    "beats_ai"
+  },
+  "downloads": {
+    "search":           "dataset/hip_hop_and_rap.txt",
+    "genre":            "hip_hop_and_rap",
+    "max_threads":      20,
+    "max_results":      20,
+    "max_workers":      5,
+    "download_folder":  "dataset/downloads",
+    "db_tablename":     "tracks"
+  },
+  "spotify": {
+    "max_tracks":         200,
+    "max_albums":         50
+  },
+  "prediction": {
+    "output":             "popularity",
+    "colname":            "genre",
+    "colval":             "hip_hop_and_rap"
+  }
+}

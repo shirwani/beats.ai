@@ -4,13 +4,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from Cassandra import *
 
-output  = 'popularity'
-colname = 'artist'
-colval  = "Kendrick Lamar"
-
 db = Cassandra()
 cfg = read_from_json_file('config.json')
 db_tablename = cfg['downloads']['db_tablename']
+output  = cfg['prediction']['output']
+colname = cfg['prediction']['colname']
+colval  = cfg['prediction']['colval']
 
 def batch_predict(data):
     # Load model and scaler once
@@ -35,9 +34,11 @@ def batch_predict(data):
     return actuals, predicted
 
 if __name__ == '__main__':
-    data = db.get_data_by_row_from_db(db_tablename, colname='artist', colval='Eminem')
+    data = db.get_data_by_row_from_db(db_tablename, colname=colname, colval=colval)
 
     ya, yp = batch_predict(data)
+    db.shutdown()
+
     x = list(range(1, len(ya) + 1))
 
     # Plot
