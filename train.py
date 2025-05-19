@@ -11,13 +11,13 @@ from utils import *
 db = Cassandra()
 cfg = read_from_json_file('config.json')
 db_tablename = cfg['downloads']['db_tablename']
-output  = cfg['prediction']['output']
-colname = cfg['prediction']['colname']
-colval  = cfg['prediction']['colval']
+output      = cfg['train']['output']
+colname     = cfg['train']['colname']
+colval      = cfg['train']['colval']
 
 def train_model():
     # Load dataset
-    data = db.get_data_from_db(db_tablename, colname=colname,  colval=colval)
+    data = db.get_data_from_db(db_tablename, colname=colname, colval=colval, excludeCol='artist', excludeVal='Hackaz Beats')
     df = pd.DataFrame(data)
 
     model_file = f"models/{output}_{colname}_{colval}"
@@ -36,21 +36,20 @@ def train_model():
     joblib.dump(scaler, f"{model_file}.pkl")
 
     # Train/test split
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled_df, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled_df, y, test_size=0.05, random_state=42)
 
     # Model
     model = keras.Sequential([
         keras.Input(shape=(len(feature_cols),)),
-        layers.Dense(256, activation='relu'),
+        layers.Dense(512, activation='relu'),
         layers.Dense(128, activation='relu'),
         layers.Dense(64,  activation='relu'),
         layers.Dense(32,  activation='relu'),
         layers.Dense(16,  activation='relu'),
-        layers.Dense(8,   activation='relu'),
         layers.Dense(1)
     ])
     model.compile(optimizer='adam', loss='mse', metrics=['mae'])
-    model.fit(X_train, y_train, epochs=500, batch_size=32, validation_split=0.1, verbose=1)
+    model.fit(X_train, y_train, epochs=1000, batch_size=32, validation_split=0.05, verbose=1)
 
     # Evaluate model
     loss, mae = model.evaluate(X_test, y_test)

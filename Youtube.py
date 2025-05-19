@@ -46,7 +46,9 @@ class Youtube:
         # Initialize the YouTube API client
         youtube = build("youtube", "v3", developerKey=self.api_key)
 
+        ############################################
         # Step 1: Search for the video by track name
+        ############################################
         search_response = youtube.search().list(
             q=query,
             part="id,snippet",
@@ -54,9 +56,11 @@ class Youtube:
             maxResults=10  # Get the top 10 results for the track
         ).execute()
 
+        ###############################################################
         # Step 2: Get the video ID of the first search result (default)
         # or
         # Pick the best result - based on publisher
+        ###############################################################
         video_id = search_response['items'][0]['id']['videoId']
 
         for item in search_response['items']:
@@ -94,7 +98,6 @@ class Youtube:
         """
 
         track = self.search_track(artist, title, channel)
-        #return track
 
 
         # Set the options for yt-dlp
@@ -124,5 +127,5 @@ class Youtube:
 
 if __name__ == '__main__':
     youtube = Youtube()
-    track = youtube.download_single_track(artist="Kendrick Lamar", title="dodger blue (feat. wallie the sensei, siete7x, roddy ricch)")
+    track = youtube.download_single_track(artist="HackaZ Beats", title="Divine Drip", channel="")
     print(track)

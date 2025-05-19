@@ -59,7 +59,7 @@ python basic_analysis.py
 # MAKE A LOCAL COPY OF CASSANDRA DATA IF WE HAVEN'T MOUNTED A VOLUME
 ####################################################################
 docker exec cassandra-container cqlsh -e "COPY beats_ai.tracks TO '/tmp/tracks.csv' WITH HEADER = true;"
-docker cp cassandra-container:/tmp/tracks.csv .dataset/cassandra/tracks.csv
+docker cp cassandra-container:/tmp/tracks.csv ./dataset/cassandra/tracks.csv
 
 
 ################################

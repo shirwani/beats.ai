@@ -137,66 +137,6 @@ class Cassandra:
                 features['key_mode'],
                 track['id']))
 
-    def get_data_by_row_from_db(self, db_tablename, colname, colval):
-        query = f"SELECT * FROM {db_tablename} WHERE {colname} = %s ALLOW FILTERING;"
-        tracks = self.db_session.execute(query, (colval, ))
-
-        data = list()
-        for track in tracks:
-            d = dict()
-            d['tempo'] = track.tempo
-            d['energy'] = track.energy
-            d['danceability'] = track.danceability
-            d['complexity'] = track.complexity
-            d['speechiness'] = track.speechiness
-            d['loudness'] = track.loudness
-            d['valence'] = track.valence
-            d['time_signature'] = track.time_signature
-            d['key'] = track.key
-            d['key_mode'] = track.key_mode
-            d['views'] = track.views
-            d['likes'] = track.likes
-            d['popularity'] = track.likes/track.views
-            data.append(d)
-
-        return data
-
-    def get_data_from_db(self, db_tablename, colname, colval):
-        query = f"SELECT * FROM {db_tablename} WHERE {colname} = %s ALLOW FILTERING;"
-        tracks = self.db_session.execute(query, (colval, ))
-
-        data = dict()
-        data['tempo'] = list()
-        data['energy'] = list()
-        data['danceability'] = list()
-        data['complexity'] = list()
-        data['speechiness'] = list()
-        data['loudness'] = list()
-        data['valence'] = list()
-        data['time_signature'] = list()
-        data['key'] = list()
-        data['key_mode'] = list()
-        data['views'] = list()
-        data['likes'] = list()
-        data['popularity'] = list()
-
-        for track in tracks:
-            data['tempo'].append(track.tempo)
-            data['energy'].append(track.energy)
-            data['danceability'].append(track.danceability)
-            data['complexity'].append(track.complexity)
-            data['speechiness'].append(track.speechiness)
-            data['loudness'].append(track.loudness)
-            data['valence'].append(track.valence)
-            data['time_signature'].append(track.time_signature)
-            data['key'].append(track.key)
-            data['key_mode'].append(track.key_mode)
-            data['views'].append(track.views)
-            data['likes'].append(track.likes)
-            data['popularity'].append(track.likes/track.views)
-
-        return data
-
 
     def get_single_item_from_db(self, db_tablename, colname, colval):
         query = f"SELECT * FROM {db_tablename} WHERE {colname} = %s LIMIT 1 ALLOW FILTERING;"
@@ -221,6 +161,71 @@ class Cassandra:
 
         return data
 
+
+    def get_data_by_row_from_db(self, db_tablename, colname, colval):
+        query = f"SELECT * FROM {db_tablename} WHERE {colname} = %s ALLOW FILTERING;"
+        tracks = self.db_session.execute(query, (colval, ))
+
+        data = list()
+        for track in tracks:
+            d = dict()
+            d['title'] = track.title
+            d['tempo'] = track.tempo
+            d['energy'] = track.energy
+            d['danceability'] = track.danceability
+            d['complexity'] = track.complexity
+            d['speechiness'] = track.speechiness
+            d['loudness'] = track.loudness
+            d['valence'] = track.valence
+            d['time_signature'] = track.time_signature
+            d['key'] = track.key
+            d['key_mode'] = track.key_mode
+            #d['views'] = track.views
+            #d['likes'] = track.likes
+            d['popularity'] = track.likes/track.views
+            data.append(d)
+
+        return data
+
+    def get_data_from_db(self, db_tablename, colname, colval, excludeCol=None, excludeVal=None):
+        query = f"SELECT * FROM {db_tablename} WHERE {colname} = %s ALLOW FILTERING;"
+        tracks = self.db_session.execute(query, (colval, ))
+
+        data = dict()
+        data['tempo'] = list()
+        data['energy'] = list()
+        data['danceability'] = list()
+        data['complexity'] = list()
+        data['speechiness'] = list()
+        data['loudness'] = list()
+        data['valence'] = list()
+        data['time_signature'] = list()
+        data['key'] = list()
+        data['key_mode'] = list()
+        #data['views'] = list()
+        #data['likes'] = list()
+        data['popularity'] = list()
+
+        for track in tracks:
+            if excludeCol == 'artist':
+                if track.artist == excludeVal:
+                    continue
+
+            data['tempo'].append(track.tempo)
+            data['energy'].append(track.energy)
+            data['danceability'].append(track.danceability)
+            data['complexity'].append(track.complexity)
+            data['speechiness'].append(track.speechiness)
+            data['loudness'].append(track.loudness)
+            data['valence'].append(track.valence)
+            data['time_signature'].append(track.time_signature)
+            data['key'].append(track.key)
+            data['key_mode'].append(track.key_mode)
+            #data['views'].append(track.views)
+            #data['likes'].append(track.likes)
+            data['popularity'].append(track.likes/track.views)
+
+        return data
 
 if __name__ == '__main__':
     cassandra = Cassandra()

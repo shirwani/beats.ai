@@ -6,7 +6,7 @@
     "db_keyspace":    "beats_ai"
   },
   "downloads": {
-    "search":           "dataset/hip_hop_and_rap.txt",
+    "artist":           "DaBaby",
     "genre":            "hip_hop_and_rap",
     "max_threads":      20,
     "max_results":      20,
@@ -18,7 +18,17 @@
     "max_tracks":         200,
     "max_albums":         50
   },
-  "prediction": {
+  "train": {
+    "output":             "popularity",
+    "colname":            "genre",
+    "colval":             "hip_hop_and_rap"
+  },
+  "test": {
+    "output":             "popularity",
+    "colname":            "genre",
+    "colval":             "hip_hop_and_rap"
+  },
+  "predict": {
     "output":             "popularity",
     "colname":            "genre",
     "colval":             "hip_hop_and_rap"

@@ -75,38 +75,5 @@ def fcn_logger(fcn):
     return wrapper
 
 
-def get_hat_data():
-    data = dict()
-    data['tempo'] = list()
-    data['energy'] = list()
-    data['danceability'] = list()
-    data['complexity'] = list()
-    data['speechiness'] = list()
-    data['loudness'] = list()
-    data['valence'] = list()
-    data['time_signature'] = list()
-    data['key'] = list()
-    data['key_mode'] = list()
-    data['views'] = list()
-    data['likes'] = list()
-    data['popularity'] = list()
 
-    tracks = read_from_json_file('scratch/hackaz.json')
-
-    for key in tracks:
-        data['tempo'].append(tracks[key]['tempo'])
-        data['energy'].append(tracks[key]['energy'])
-        data['danceability'].append(tracks[key]['danceability'])
-        data['complexity'].append(tracks[key]['complexity'])
-        data['speechiness'].append(tracks[key]['speechiness'])
-        data['loudness'].append(tracks[key]['loudness'])
-        data['valence'].append(tracks[key]['valence'])
-        data['time_signature'].append(tracks[key]['time_signature'])
-        data['key'].append(tracks[key]['key'])
-        data['key_mode'].append(tracks[key]['key_mode'])
-        data['views'].append(tracks[key]['views'])
-        data['likes'].append(tracks[key]['likes'])
-        data['popularity'].append(tracks[key]['likes']/tracks[key]['views'])
-
-    return data
 

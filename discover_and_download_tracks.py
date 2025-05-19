@@ -1,11 +1,10 @@
-from utils import *
 from Spotify import *
 from Youtube import *
-from Cassandra import *
 from FeatureExtraction import *
 
-artist = 'J. Cole'
-genre = "hip_hop_and_rap"
+cfg = read_from_json_file('config.json')
+artist = cfg['downloads']['artist']
+genre  = cfg['downloads']['genre']
 
 if __name__ == '__main__':
     cassandra = Cassandra()
