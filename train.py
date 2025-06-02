@@ -41,7 +41,6 @@ def train_model():
     # Model
     model = keras.Sequential([
         keras.Input(shape=(len(feature_cols),)),
-        layers.Dense(512, activation='relu'),
         layers.Dense(128, activation='relu'),
         layers.Dense(64,  activation='relu'),
         layers.Dense(32,  activation='relu'),

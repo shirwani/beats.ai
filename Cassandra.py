@@ -94,7 +94,7 @@ class Cassandra:
         return ptracks
 
     @fcn_logger
-    def get_track_ids(self, num_tracks=10000):
+    def get_track_ids(self):
         query = f"SELECT * FROM {self.db_tablename};"
         tracks = self.db_session.execute(query)
 
@@ -104,6 +104,34 @@ class Cassandra:
             ptracks.append(t['id'])
 
         return ptracks
+
+
+    @fcn_logger
+    def get_track_ids_for_artist(self, artist_name):
+        query = f"SELECT * FROM {self.db_tablename} WHERE artist = %s ALLOW FILTERING;"
+        tracks = self.db_session.execute(query, (artist_name, ))
+
+        ptracks = list()
+        for track in tracks:
+            t = track._asdict()
+            ptracks.append(t['id'])
+
+        return ptracks
+
+
+    def get_track_count_for_all_artists(self):
+        query = f"SELECT artist FROM {self.db_tablename} ALLOW FILTERING;"
+        tracks = self.db_session.execute(query)
+
+        artists = dict()
+        for artist in tracks:
+            artist = artist.artist
+            if artist not in artists:
+                artists[artist] = 1
+            artists[artist] += 1
+
+        print(artists)
+        return artists
 
 
     @fcn_logger
@@ -229,6 +257,8 @@ class Cassandra:
 
 if __name__ == '__main__':
     cassandra = Cassandra()
-    cassandra.create_db_table()
+    #cassandra.create_db_table()
+    cassandra.get_track_count_for_all_artists()
+    cassandra.shutdown()
 
 

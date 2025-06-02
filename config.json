@@ -6,7 +6,6 @@
     "db_keyspace":    "beats_ai"
   },
   "downloads": {
-    "artist":           "DaBaby",
     "genre":            "hip_hop_and_rap",
     "max_threads":      20,
     "max_results":      20,

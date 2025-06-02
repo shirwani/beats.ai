@@ -1,23 +1,37 @@
+import utils
 from Spotify import *
 from Youtube import *
 from FeatureExtraction import *
 
 cfg = read_from_json_file('config.json')
-artist = cfg['downloads']['artist']
 genre  = cfg['downloads']['genre']
 
-if __name__ == '__main__':
-    cassandra = Cassandra()
-    cassandra.create_db_table()
+cassandra = Cassandra()
 
-    existing_tracks = cassandra.get_track_ids()
+def get_next_artist_to_process():
+    artists_to_process = utils.read_list_from_text_file(f"dataset/{genre}.txt")
+    artists_processed  = cassandra.get_track_count_for_all_artists()
+
+    for artist in artists_to_process:
+        if artist in artists_processed and artists_processed[artist] < 50:
+            print(f"Processing {artist}\n")
+            return artist
+
+
+if __name__ == '__main__':
+
+    artist_name = get_next_artist_to_process()
+
+    if True:
+        #cassandra.create_db_table()
+        existing_tracks = cassandra.get_track_ids_for_artist(artist_name=artist_name)
 
     if True:
         #####################################
         # Search Spotify for tracks by artist
         #####################################
         spotify = Spotify()
-        tracks = spotify.search_tracks_by_artist(artist_name=artist)
+        tracks = spotify.search_tracks_by_artist(artist_name=artist_name)
 
     if True:
         ##############################
@@ -35,8 +49,8 @@ if __name__ == '__main__':
             except Exception as e:
                 print(e)
 
-        dump_to_json_file(downloads, f"dataset/{genre}.json")
-        downloads = read_from_json_file(f"dataset/{genre}.json")
+        #dump_to_json_file(downloads, f"dataset/{genre}.json")
+        #downloads = read_from_json_file(f"dataset/{genre}.json")
 
     if True:
         ##############################################
