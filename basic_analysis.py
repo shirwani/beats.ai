@@ -22,7 +22,7 @@ def basic_analysis():
     }
 
     data1 = db.get_data_from_db(db_tablename, colname='genre',  colval='hip_hop_and_rap')
-    data2 = db.get_data_from_db(db_tablename, colname='artist', colval='Gunna')
+    data2 = db.get_data_from_db(db_tablename, colname='artist', colval='Migos')
 
     features = list(feature_map.keys())
     fig, axes = plt.subplots(4, 2, figsize=(20, 10))

@@ -13,14 +13,17 @@ def get_next_artist_to_process():
     artists_processed  = cassandra.get_track_count_for_all_artists()
 
     for artist in artists_to_process:
-        if artist in artists_processed and artists_processed[artist] < 50:
-            print(f"Processing {artist}\n")
-            return artist
+        if artist in artists_processed and artists_processed[artist] > 50:
+            continue
+
+        print(f"Processing {artist}\n")
+        return artist
 
 
 if __name__ == '__main__':
 
     artist_name = get_next_artist_to_process()
+    print(artist_name)
 
     if True:
         #cassandra.create_db_table()

@@ -108,6 +108,7 @@ class Cassandra:
 
     @fcn_logger
     def get_track_ids_for_artist(self, artist_name):
+        print(artist_name)
         query = f"SELECT * FROM {self.db_tablename} WHERE artist = %s ALLOW FILTERING;"
         tracks = self.db_session.execute(query, (artist_name, ))
 
