@@ -1,9 +1,10 @@
+import joblib
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from tensorflow import keras
 from tensorflow.keras import layers
-import joblib
+from tensorflow.keras.optimizers import Adam
 
 from Cassandra import *
 from utils import *
@@ -36,7 +37,7 @@ def train_model():
     joblib.dump(scaler, f"{model_file}.pkl")
 
     # Train/test split
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled_df, y, test_size=0.05, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled_df, y, test_size=0.2, random_state=42)
 
     # Model
     model = keras.Sequential([
@@ -47,8 +48,8 @@ def train_model():
         layers.Dense(16,  activation='relu'),
         layers.Dense(1)
     ])
-    model.compile(optimizer='adam', loss='mse', metrics=['mae'])
-    model.fit(X_train, y_train, epochs=1000, batch_size=32, validation_split=0.05, verbose=1)
+    model.compile(optimizer=Adam(learning_rate=0.001), loss='mse', metrics=['mae'])
+    model.fit(X_train, y_train, epochs=1000, batch_size=32, validation_split=0.2, verbose=1)
 
     # Evaluate model
     loss, mae = model.evaluate(X_test, y_test)
