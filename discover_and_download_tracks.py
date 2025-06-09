@@ -13,7 +13,7 @@ def get_next_artist_to_process():
     artists_processed  = cassandra.get_track_count_for_all_artists()
 
     for artist in artists_to_process:
-        if artist in artists_processed and artists_processed[artist] > 50:
+        if artist in artists_processed and artists_processed[artist] > 100:
             continue
 
         print(f"Processing {artist}\n")
